@@ -15,9 +15,9 @@ const authors = [
 ]
 
 const books = [
-  { name: 'The Sense of an Ending', genre: 'Drama', id: '1' },
-  { name: 'Nothing Ventured', genre: 'Drama', id: '2' },
-  { name: 'London', genre: 'Historical Fiction', id: '3' },
+  { name: 'The Sense of an Ending', genre: 'Drama', id: '1', authorId: '1' },
+  { name: 'Nothing Ventured', genre: 'Drama', id: '2', authorId: '2' },
+  { name: 'London', genre: 'Historical Fiction', id: '3', authorId: '3' },
 ]
 
 const BookType = new GraphQLObjectType({
@@ -26,6 +26,12 @@ const BookType = new GraphQLObjectType({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
     genre: { type: GraphQLString },
+    author: {
+      type: AuthorType,
+      resolve: ({ authorId }) => (
+        authors.find(author => author.id === authorId)
+      )
+    },
   }),
 })
 
@@ -46,7 +52,7 @@ const RootQuery = new GraphQLObjectType({
       args: {
         id: { type: GraphQLID },
       },
-      resolve: (parent, { id }) => {
+      resolve: (_parent, { id }) => {
         // code to get data from db / other sources
         return books.find(book => book.id === id)
       },
@@ -56,7 +62,7 @@ const RootQuery = new GraphQLObjectType({
       args: {
         id: { type: GraphQLID },
       },
-      resolve: (parent, { id }) => (
+      resolve: (_parent, { id }) => (
         authors.find(author => author.id === id)
       ),
     },
