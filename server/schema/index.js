@@ -11,20 +11,6 @@ const {
   GraphQLList,
 } = graphql;
 
-const authors = [
-  { name: 'Julian Barnes', age: 74, id: '1' },
-  { name: 'Jeffrey Archer', age: 79, id: '2' },
-  { name: 'Edward Rutherfurd', age: 72, id: '3' }
-]
-
-const books = [
-  { name: 'The Sense of an Ending', genre: 'Drama', id: '1', authorId: '1' },
-  { name: 'Nothing Ventured', genre: 'Drama', id: '2', authorId: '2' },
-  { name: 'London', genre: 'Historical Fiction', id: '3', authorId: '3' },
-  { name: 'The Only Story', genre: 'Romance', id: '4', authorId: '1' },
-  { name: 'Only Time Will Tell', genre: 'Drama', id: '5', authorId: '2' }
-]
-
 const BookType = new GraphQLObjectType({
   name: 'Book',
   fields: () => ({
@@ -79,15 +65,37 @@ const RootQuery = new GraphQLObjectType({
     },
     authors: {
       type: new GraphQLList(AuthorType),
-      resolve: () => authors,
+      resolve: () => Author.find(),
     },
     books: {
       type: new GraphQLList(BookType),
-      resolve: () => books,
+      resolve: () => Book.find(),
     },
   },
 })
 
+const Mutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    addAuthor: {
+      type: AuthorType,
+      args: {
+        name: { type: GraphQLString },
+        age: { type: GraphQLInt },
+      },
+      resolve: (_parent, { name, age }) => {
+        const author = new Author({
+          name,
+          age
+        })
+
+        return author.save()
+      }
+    }
+  },
+})
+
 module.exports = new GraphQLSchema({
-  query: RootQuery
+  query: RootQuery,
+  mutation: Mutation,
 })
