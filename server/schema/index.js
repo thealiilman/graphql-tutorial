@@ -6,6 +6,7 @@ const {
   GraphQLInt,
   GraphQLSchema,
   GraphQLID,
+  GraphQLList,
 } = graphql;
 
 const authors = [
@@ -18,6 +19,8 @@ const books = [
   { name: 'The Sense of an Ending', genre: 'Drama', id: '1', authorId: '1' },
   { name: 'Nothing Ventured', genre: 'Drama', id: '2', authorId: '2' },
   { name: 'London', genre: 'Historical Fiction', id: '3', authorId: '3' },
+  { name: 'The Only Story', genre: 'Romance', id: '4', authorId: '1' },
+  { name: 'Only Time Will Tell', genre: 'Drama', id: '5', authorId: '2' }
 ]
 
 const BookType = new GraphQLObjectType({
@@ -30,18 +33,24 @@ const BookType = new GraphQLObjectType({
       type: AuthorType,
       resolve: ({ authorId }) => (
         authors.find(author => author.id === authorId)
-      )
+      ),
     },
   }),
 })
 
 const AuthorType = new GraphQLObjectType({
   name: 'Author',
-  fields: () => ({
+  fields: {
     id: { type: GraphQLID },
     name: { type: GraphQLString },
     age: { type: GraphQLInt },
-  }),
+    books: {
+      type: new GraphQLList(BookType),
+      resolve: ({ id }) => (
+        books.filter(book => book.authorId === id)
+      ),
+    },
+  },
 })
 
 const RootQuery = new GraphQLObjectType({
@@ -65,6 +74,14 @@ const RootQuery = new GraphQLObjectType({
       resolve: (_parent, { id }) => (
         authors.find(author => author.id === id)
       ),
+    },
+    authors: {
+      type: new GraphQLList(AuthorType),
+      resolve: () => authors,
+    },
+    books: {
+      type: new GraphQLList(BookType),
+      resolve: () => books,
     },
   },
 })
