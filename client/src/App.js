@@ -9,7 +9,7 @@ const client = new ApolloClient({
 
 function App() {
   return (
-    <ApolloProvider client={client}
+    <ApolloProvider client={client}>
       <div id="main">
         <h1>Ali's Reading List</h1>
         <BookList />
