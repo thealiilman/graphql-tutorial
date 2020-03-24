@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { getBooksQuery } from '../graphql/queries'
+import BookDetails from './BookDetails'
 
 function BookList() {
   const { loading, data } = useQuery(getBooksQuery)
@@ -19,6 +20,7 @@ function BookList() {
       <ul id="book-list">
         {renderBooks()}
       </ul>
+      <BookDetails />
     </div>
   );
 }
