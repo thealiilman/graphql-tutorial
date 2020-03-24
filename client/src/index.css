@@ -30,6 +30,11 @@ body {
   color: #880E4F;
 }
 
+#book-list li.selected-book {
+  color: white;
+  background-color: #880E4F;
+}
+
 form {
   background-color: white;
   padding: 20px;

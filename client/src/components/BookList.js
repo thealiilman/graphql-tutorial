@@ -13,6 +13,7 @@ function BookList() {
 
     return data.books.map(book => (
       <li
+        className={book.id == selectedBookId ? 'selected-book' : ''}
         key={`${book.id}-${book.name}`}
         onClick={() => setSelectedBook(book.id)}
       >
