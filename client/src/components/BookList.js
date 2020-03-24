@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
-import { getBooksQuery } from '../queries'
+import { getBooksQuery } from '../graphql/queries'
 
 function BookList() {
   const { loading, data } = useQuery(getBooksQuery)

@@ -1,9 +1,27 @@
-import React from 'react'
-import { useQuery } from '@apollo/react-hooks'
-import { getAuthorsQuery } from '../queries'
+import React, { useState } from 'react'
+import { useQuery, useMutation } from '@apollo/react-hooks'
+import { getAuthorsQuery } from '../graphql/queries'
+import { addBookMutation } from '../graphql/mutations'
 
 function AddBook() {
+  const [name, setNameOfBook] = useState('')
+  const [genre, setGenreOfBook] = useState('')
+  const [authorId, setAuthorIdOfBook] = useState('')
+
   const { loading, data } = useQuery(getAuthorsQuery)
+  const [addBook] = useMutation(addBookMutation)
+
+  const submitForm = (e) => {
+    e.preventDefault()
+    console.log({ name, genre, authorId })
+    addBook({
+      variables: {
+        name,
+        genre,
+        authorId
+      }
+    })
+  }
 
   const renderAuthors = () => {
     if (loading) {
@@ -16,20 +34,20 @@ function AddBook() {
   }
 
   return (
-    <form id="add-book">
+    <form id="add-book" onSubmit={submitForm}>
       <div className="field">
         <label>Book name:</label>
-        <input type="text" />
+        <input type="text" onChange={e => setNameOfBook(e.target.value)} />
       </div>
 
       <div className="field">
         <label>Genre:</label>
-        <input type="text" />
+        <input type="text" onChange={e => setGenreOfBook(e.target.value)} />
       </div>
 
       <div className="field">
         <label>Author:</label>
-        <select>
+        <select onChange={e => setAuthorIdOfBook(e.target.value)}>
           <option>Select author</option>
           {renderAuthors()}
         </select>
