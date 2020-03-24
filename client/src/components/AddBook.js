@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useQuery, useMutation } from '@apollo/react-hooks'
-import { getAuthorsQuery } from '../graphql/queries'
+import { getAuthorsQuery, getBooksQuery } from '../graphql/queries'
 import { addBookMutation } from '../graphql/mutations'
 
 function AddBook() {
@@ -19,7 +19,8 @@ function AddBook() {
         name,
         genre,
         authorId
-      }
+      },
+      refetchQueries: [{ query: getBooksQuery }]
     })
   }
 
